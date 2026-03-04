@@ -4,154 +4,201 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GridLands</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #1a1a2e;
-    color: #e0e0e0;
+    font-family: 'Press Start 2P', monospace;
+    background: #000;
+    color: #ccc;
     height: 100vh;
     overflow: hidden;
     display: flex;
+    image-rendering: pixelated;
   }
 
   /* ── Sidebar ── */
   #sidebar {
-    width: 240px;
-    min-width: 240px;
-    background: #16213e;
-    padding: 20px 16px;
+    width: 270px;
+    min-width: 270px;
+    background: #05050a;
+    padding: 16px 12px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    border-right: 2px solid #0f3460;
+    gap: 14px;
+    border-right: 2px solid #00ffff;
     z-index: 10;
     overflow-y: auto;
   }
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-thumb { background: #00ffff; }
+  #sidebar::-webkit-scrollbar-track { background: #111; }
 
   #sidebar h1 {
-    font-size: 26px;
-    letter-spacing: 2px;
-    color: #e0a535;
+    font-size: 18px;
+    color: #ffff00;
     text-align: center;
-    text-transform: uppercase;
+    text-shadow:
+      0 0 8px #ffff00,
+      0 0 20px rgba(255,200,0,.4),
+      -1px 0 #ff0044,
+       1px 0 #00ffff;
+    padding: 8px 0;
+    letter-spacing: 3px;
   }
 
   .stats-row {
     display: flex;
     justify-content: space-around;
     text-align: center;
+    border: 1px solid #333;
+    padding: 10px 4px;
+    background: #0a0a10;
   }
-  .stat { font-size: 13px; color: #9db5d4; }
+  .stat {
+    font-size: 7px;
+    color: #00ffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
   .stat strong {
     display: block;
     color: #fff;
-    font-size: 22px;
-    line-height: 1.3;
+    font-size: 18px;
+    margin-top: 4px;
+    text-shadow: 0 0 6px currentColor;
   }
-  .stat .score-val { color: #e0a535; }
+  .stat .score-val { color: #ffff00; }
 
-  .btn-row { display: flex; gap: 8px; }
+  .btn-row { display: flex; gap: 6px; }
   .btn-row button {
     flex: 1;
-    padding: 9px 0;
-    font-size: 14px;
-    font-weight: 700;
-    border: none;
-    border-radius: 6px;
+    padding: 10px 0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    font-weight: 400;
+    border: 2px solid;
     cursor: pointer;
-    transition: background .2s;
-  }
-  #new-game-btn { background: #e0a535; color: #1a1a2e; }
-  #new-game-btn:hover { background: #f0b848; }
-  #undo-btn { background: #0f3460; color: #9db5d4; border: 1px solid #1a4a7a !important; }
-  #undo-btn:hover { background: #1a4a7a; color: #fff; }
-  #undo-btn:disabled { opacity: .35; cursor: default; }
-
-  /* Quests */
-  #quests-section h3,
-  #legend h3 {
-    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #6c8ebf;
-    margin-bottom: 4px;
+    transition: box-shadow .15s, background .15s;
   }
+  #new-game-btn {
+    background: #111;
+    color: #ffff00;
+    border-color: #ffff00;
+  }
+  #new-game-btn:hover {
+    background: #ffff00;
+    color: #000;
+    box-shadow: 0 0 12px #ffff00;
+  }
+  #undo-btn {
+    background: #111;
+    color: #00ffff;
+    border-color: #00ffff;
+  }
+  #undo-btn:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 12px #00ffff;
+  }
+  #undo-btn:disabled {
+    opacity: .25;
+    cursor: default;
+    box-shadow: none;
+    background: #111;
+    color: #00ffff;
+  }
+
+  /* Section headers */
+  #quests-section h3,
+  #legend h3 {
+    font-size: 7px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ff00ff;
+    text-shadow: 0 0 6px rgba(255,0,255,.4);
+    padding-bottom: 4px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 6px;
+  }
+
+  /* Quests */
   #quests-section { display: flex; flex-direction: column; gap: 6px; }
 
   .quest-card {
-    background: #0d1b36;
-    border: 1px solid #1a3a5c;
-    border-radius: 8px;
-    padding: 8px 10px;
-    transition: box-shadow .3s, border-color .3s;
+    background: #0a0a14;
+    border: 1px solid #333;
+    padding: 8px;
+    transition: border-color .3s, box-shadow .3s;
   }
   .quest-card .q-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: #e0e0e0;
-    margin-bottom: 2px;
+    font-size: 8px;
+    color: #ffff00;
+    margin-bottom: 3px;
+    text-shadow: 0 0 4px rgba(255,255,0,.3);
   }
   .quest-card .q-desc {
-    font-size: 11px;
-    color: #7a9cc6;
-    margin-bottom: 4px;
+    font-size: 6px;
+    color: #666;
+    margin-bottom: 6px;
+    line-height: 1.6;
   }
   .quest-card .q-progress-row {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .quest-card .q-progress-text {
-    font-size: 12px;
-    font-weight: 600;
-    color: #9db5d4;
-    min-width: 38px;
+    font-size: 7px;
+    color: #00ffff;
+    min-width: 44px;
   }
   .q-bar {
     flex: 1;
     height: 6px;
-    background: #1a2a44;
-    border-radius: 3px;
+    background: #1a1a2a;
     overflow: hidden;
   }
   .q-bar-fill {
     height: 100%;
-    background: #e0a535;
-    border-radius: 3px;
+    background: #ff00ff;
+    box-shadow: 0 0 6px rgba(255,0,255,.5);
     transition: width .4s ease;
   }
   .quest-card .q-reward {
-    font-size: 11px;
-    color: #6c8ebf;
+    font-size: 6px;
+    color: #555;
   }
 
-  @keyframes goldFlash {
-    0%   { border-color: #e0a535; box-shadow: 0 0 14px rgba(224,165,53,.5); }
-    100% { border-color: #1a3a5c; box-shadow: none; }
+  @keyframes arcadeFlash {
+    0%   { border-color: #ffff00; box-shadow: 0 0 16px rgba(255,255,0,.6), inset 0 0 16px rgba(255,255,0,.1); }
+    50%  { border-color: #ff00ff; box-shadow: 0 0 16px rgba(255,0,255,.6), inset 0 0 16px rgba(255,0,255,.1); }
+    100% { border-color: #333; box-shadow: none; }
   }
-  .quest-card.flash {
-    animation: goldFlash 1s ease-out;
-  }
+  .quest-card.flash { animation: arcadeFlash 1s ease-out; }
 
   /* Legend */
-  #legend { display: flex; flex-direction: column; gap: 6px; }
+  #legend { display: flex; flex-direction: column; gap: 5px; }
   .legend-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 7px;
+    color: #999;
   }
   .legend-swatch {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 12px;
+    font-family: 'Press Start 2P', monospace;
+    border: 1px solid;
   }
 
   /* ── Canvas area ── */
@@ -159,6 +206,32 @@
     flex: 1;
     position: relative;
     overflow: hidden;
+    background: #000;
+  }
+
+  /* CRT scanlines */
+  #game-area::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.12) 2px,
+      rgba(0,0,0,0.12) 4px
+    );
+    pointer-events: none;
+    z-index: 6;
+  }
+  /* CRT vignette */
+  #game-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.65) 100%);
+    pointer-events: none;
+    z-index: 6;
   }
 
   canvas {
@@ -170,25 +243,23 @@
   /* ── Next Tile Preview ── */
   #preview {
     position: absolute;
-    bottom: 24px;
-    right: 24px;
-    background: #16213e;
-    border: 2px solid #0f3460;
-    border-radius: 12px;
-    padding: 14px 20px;
+    bottom: 20px;
+    right: 20px;
+    background: #05050a;
+    border: 2px solid #00ffff;
+    padding: 12px 16px;
     text-align: center;
     z-index: 10;
   }
   #preview .label {
-    font-size: 12px;
+    font-size: 6px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #6c8ebf;
-    margin-bottom: 8px;
+    letter-spacing: 2px;
+    color: #00ffff;
+    margin-bottom: 6px;
   }
   #preview .tile-name {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 10px;
   }
   #preview canvas {
     width: 70px;
@@ -199,41 +270,39 @@
   /* ── Nav controls hint ── */
   #nav-controls {
     position: absolute;
-    bottom: 24px;
-    left: 24px;
-    background: #16213e;
-    border: 2px solid #0f3460;
-    border-radius: 12px;
-    padding: 12px 16px;
+    bottom: 20px;
+    left: 20px;
+    background: #05050aee;
+    border: 1px solid #333;
+    padding: 10px 12px;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
   #nav-controls .label {
-    font-size: 12px;
+    font-size: 6px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #6c8ebf;
+    letter-spacing: 2px;
+    color: #ff00ff;
     margin-bottom: 2px;
   }
   .nav-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #9db5d4;
+    gap: 6px;
+    font-size: 6px;
+    color: #666;
   }
   kbd {
     display: inline-block;
-    background: #0f3460;
-    color: #e0e0e0;
-    border: 1px solid #1a4a7a;
-    border-radius: 4px;
-    padding: 2px 7px;
-    font-family: 'Segoe UI', monospace;
-    font-size: 12px;
-    min-width: 24px;
+    background: #111;
+    color: #00ffff;
+    border: 1px solid #00ffff;
+    padding: 2px 5px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    min-width: 18px;
     text-align: center;
     line-height: 1.4;
   }
@@ -243,62 +312,92 @@
     display: none;
     position: absolute;
     inset: 0;
-    background: rgba(10, 10, 30, .82);
+    background: rgba(0, 0, 0, .88);
     z-index: 50;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 18px;
+    gap: 24px;
   }
   #overlay.visible { display: flex; }
   #overlay h2 {
-    font-size: 42px;
-    color: #e0a535;
+    font-size: 28px;
+    color: #ff0044;
+    text-shadow:
+      0 0 12px #ff0044,
+      0 0 30px rgba(255,0,68,.4),
+      -2px 0 #ffff00,
+       2px 0 #00ffff;
+    letter-spacing: 4px;
   }
   #overlay .final-score {
-    font-size: 22px;
-    color: #9db5d4;
+    font-size: 10px;
+    color: #aaa;
   }
   #overlay .final-score strong {
-    color: #fff;
-    font-size: 28px;
+    color: #ffff00;
+    font-size: 20px;
+    text-shadow: 0 0 8px rgba(255,255,0,.5);
   }
   #overlay button {
-    background: #e0a535;
-    color: #1a1a2e;
-    border: none;
-    padding: 12px 32px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 6px;
+    font-family: 'Press Start 2P', monospace;
+    background: #000;
+    color: #00ff41;
+    border: 2px solid #00ff41;
+    padding: 14px 28px;
+    font-size: 10px;
     cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: btnPulse 1.5s ease-in-out infinite;
   }
-  #overlay button:hover { background: #f0b848; }
+  #overlay button:hover {
+    background: #00ff41;
+    color: #000;
+    box-shadow: 0 0 20px #00ff41;
+  }
+  @keyframes btnPulse {
+    0%, 100% { box-shadow: 0 0 4px rgba(0,255,65,.3); }
+    50%      { box-shadow: 0 0 16px rgba(0,255,65,.6); }
+  }
+
+  /* ── Credit line ── */
+  #credit {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 5px;
+    color: #333;
+    letter-spacing: 1px;
+    z-index: 7;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
 
 <!-- Sidebar -->
 <div id="sidebar">
-  <h1>GridLands</h1>
+  <h1>GRIDLANDS</h1>
 
   <div class="stats-row">
-    <div class="stat">Score<br><strong class="score-val" id="score-value">0</strong></div>
-    <div class="stat">Tiles<br><strong id="tiles-remaining">40</strong></div>
+    <div class="stat">SCORE<br><strong class="score-val" id="score-value">0</strong></div>
+    <div class="stat">TILES<br><strong id="tiles-remaining">40</strong></div>
   </div>
 
   <div class="btn-row">
-    <button id="new-game-btn">New Game</button>
-    <button id="undo-btn" disabled>Undo</button>
+    <button id="new-game-btn">NEW GAME</button>
+    <button id="undo-btn" disabled>UNDO</button>
   </div>
 
   <div id="quests-section">
-    <h3>Current Quests</h3>
+    <h3>CURRENT QUESTS</h3>
     <div id="quest-list"></div>
   </div>
 
   <div id="legend">
-    <h3>Tile Legend</h3>
+    <h3>TILE LEGEND</h3>
   </div>
 </div>
 
@@ -308,37 +407,39 @@
 
   <!-- Next tile preview -->
   <div id="preview">
-    <div class="label">Next Tile</div>
+    <div class="label">NEXT TILE</div>
     <div class="tile-name" id="preview-name"></div>
     <canvas id="preview-canvas" width="70" height="70"></canvas>
   </div>
 
   <!-- Navigation controls hint -->
   <div id="nav-controls">
-    <div class="label">Controls</div>
-    <div class="nav-row"><kbd>&larr;</kbd><kbd>&uarr;</kbd><kbd>&darr;</kbd><kbd>&rarr;</kbd> Pan</div>
-    <div class="nav-row"><kbd>+</kbd> <kbd>&minus;</kbd> Zoom</div>
-    <div class="nav-row">Drag to pan &middot; Scroll to zoom</div>
+    <div class="label">CONTROLS</div>
+    <div class="nav-row"><kbd>&larr;</kbd><kbd>&uarr;</kbd><kbd>&darr;</kbd><kbd>&rarr;</kbd> PAN</div>
+    <div class="nav-row"><kbd>+</kbd> <kbd>&minus;</kbd> ZOOM</div>
+    <div class="nav-row">DRAG &middot; SCROLL</div>
   </div>
 
   <!-- End-of-game overlay -->
   <div id="overlay">
-    <h2>All done!</h2>
-    <p class="final-score">Final Score: <strong id="final-score-val">0</strong></p>
-    <button id="overlay-new-game">Play Again</button>
+    <h2>GAME OVER</h2>
+    <p class="final-score">SCORE <strong id="final-score-val">0</strong></p>
+    <button id="overlay-new-game">CONTINUE?</button>
   </div>
+
+  <div id="credit">INSERT COIN &bull; 2026 GRIDLANDS</div>
 </div>
 
 <script>
 // ════════════════════════════════════════════
-//  TILE DEFINITIONS
+//  TILE DEFINITIONS  (arcade neon palette)
 // ════════════════════════════════════════════
 const TILE_TYPES = [
-  { name: 'Forest',  color: '#2d6a4f', icon: '🌲' },
-  { name: 'Village', color: '#b5651d', icon: '🏠' },
-  { name: 'Field',   color: '#a3b18a', icon: '🌾' },
-  { name: 'River',   color: '#219ebc', icon: '🌊' },
-  { name: 'Rail',    color: '#6c757d', icon: '🚂' },
+  { name: 'FOREST',  color: '#00ff41', dark: '#002a0e', icon: 'F' },
+  { name: 'VILLAGE', color: '#ff8800', dark: '#2a1500', icon: 'V' },
+  { name: 'FIELD',   color: '#bbff00', dark: '#202a00', icon: 'W' },
+  { name: 'RIVER',   color: '#00ccff', dark: '#001e2a', icon: '~' },
+  { name: 'RAIL',    color: '#cc77ff', dark: '#1a0033', icon: '#' },
 ];
 
 const STARTING_TILES = 40;
@@ -415,9 +516,6 @@ function drawFromBag() {
 // ════════════════════════════════════════════
 //  QUEST HELPERS
 // ════════════════════════════════════════════
-
-// Find the largest connected component of a given tile type.
-// Returns { size, tiles: [key, ...] }
 function findLargestCluster(tileIdx) {
   const visited = new Set();
   let best = { size: 0, tiles: [] };
@@ -445,12 +543,10 @@ function findLargestCluster(tileIdx) {
   return best;
 }
 
-// Find the longest straight line of a given tile type along any hex axis.
-// Returns { length, tiles: [key, ...] }
 function findLongestLine(tileIdx) {
   const axes = [[1, 0], [0, 1], [1, -1]];
   let best = { length: 0, tiles: [] };
-  const checked = new Set(); // avoid redundant line traces
+  const checked = new Set();
 
   for (const [key, type] of placed) {
     if (type !== tileIdx) continue;
@@ -460,7 +556,6 @@ function findLongestLine(tileIdx) {
       if (checked.has(lineKey)) continue;
 
       const tiles = [key];
-      // walk forward
       let cq = q + dq, cr = r + dr;
       while (placed.get(hexKey(cq, cr)) === tileIdx) {
         const k = hexKey(cq, cr);
@@ -468,7 +563,6 @@ function findLongestLine(tileIdx) {
         checked.add(`${k}|${dq},${dr}`);
         cq += dq; cr += dr;
       }
-      // walk backward
       cq = q - dq; cr = r - dr;
       while (placed.get(hexKey(cq, cr)) === tileIdx) {
         const k = hexKey(cq, cr);
@@ -507,7 +601,7 @@ function generateQuest(excludeTileIdxs) {
   const rewardPts = target * 25;
 
   return {
-    name: `Big ${TILE_TYPES[tileIdx].name}`,
+    name: `BIG ${TILE_TYPES[tileIdx].name}`,
     desc: `Place ${target} ${TILE_TYPES[tileIdx].name}s ${label}`,
     mechanic: mech.type,
     tileIdx,
@@ -521,9 +615,9 @@ function generateQuest(excludeTileIdxs) {
 // ════════════════════════════════════════════
 //  GAME STATE
 // ════════════════════════════════════════════
-let placed = new Map();   // key -> tileType index
+let placed = new Map();
 let ghosts = new Set();
-let flags = new Set();    // hex keys with 🚩
+let flags = new Set();
 let tilesLeft = STARTING_TILES;
 let nextTile = 0;
 let gameOver = false;
@@ -532,17 +626,14 @@ let displayScore = 0;
 let quests = [];
 let undoStack = [];
 
-// Camera / pan / zoom
 let camX = 0, camY = 0;
 let zoom = 1;
 const ZOOM_MIN = 0.3, ZOOM_MAX = 3, ZOOM_STEP = 0.1;
 let dragging = false, dragStartX, dragStartY, camStartX, camStartY;
 
-// Floating score texts
 let floatingTexts = [];
 let animFrameId = null;
 
-// Canvas refs
 const boardCanvas = document.getElementById('board');
 const ctx = boardCanvas.getContext('2d');
 const previewCanvas = document.getElementById('preview-canvas');
@@ -564,16 +655,14 @@ function newGame() {
 
   fillBag();
 
-  // Starting tile at origin
   const startType = drawFromBag();
   placed.set(hexKey(0, 0), startType);
   rebuildGhosts();
 
-  // Initial quests per spec
   quests = [
-    { name: 'Big Forest',  desc: 'Place 7 connected Forests',        mechanic: 'cluster', tileIdx: 0, target: 7, progress: 0, rewardTiles: 5, rewardPts: 180 },
-    { name: 'Big River',   desc: 'Place 8 Rivers in a line',         mechanic: 'line',    tileIdx: 3, target: 8, progress: 0, rewardTiles: 5, rewardPts: 180 },
-    { name: 'Big Field',   desc: 'Place 8 Fields grouped together',  mechanic: 'cluster', tileIdx: 2, target: 8, progress: 0, rewardTiles: 5, rewardPts: 180 },
+    { name: 'BIG FOREST',  desc: 'Place 7 connected FORESTs',        mechanic: 'cluster', tileIdx: 0, target: 7, progress: 0, rewardTiles: 5, rewardPts: 180 },
+    { name: 'BIG RIVER',   desc: 'Place 8 RIVERs in a line',         mechanic: 'line',    tileIdx: 3, target: 8, progress: 0, rewardTiles: 5, rewardPts: 180 },
+    { name: 'BIG FIELD',   desc: 'Place 8 FIELDs grouped together',  mechanic: 'cluster', tileIdx: 2, target: 8, progress: 0, rewardTiles: 5, rewardPts: 180 },
   ];
 
   nextTile = drawFromBag();
@@ -658,22 +747,16 @@ function updateQuests(placedQ, placedR) {
     }
 
     if (quest.progress >= quest.target) {
-      // Quest complete!
       score += quest.rewardPts;
       tilesLeft += quest.rewardTiles;
-
-      // Place flag at the placed tile that triggered completion
       flags.add(hexKey(placedQ, placedR));
 
-      // Floating text
       addFloatingText(placedQ, placedR,
-        `🚩 +${quest.rewardPts}pts +${quest.rewardTiles} tiles`, '#ffd700');
+        `+${quest.rewardPts}PTS +${quest.rewardTiles}TILES`, '#ff00ff');
 
-      // Replace with new quest
       const excludeIdxs = quests.filter((_, j) => j !== i).map(q2 => q2.tileIdx);
       quests[i] = generateQuest(excludeIdxs);
 
-      // Update new quest progress immediately
       const nq = quests[i];
       if (nq.mechanic === 'cluster') {
         nq.progress = findLargestCluster(nq.tileIdx).size;
@@ -681,7 +764,6 @@ function updateQuests(placedQ, placedR) {
         nq.progress = findLongestLine(nq.tileIdx).length;
       }
 
-      // Flash the card
       requestAnimationFrame(() => {
         const cards = document.querySelectorAll('.quest-card');
         if (cards[i]) {
@@ -699,7 +781,7 @@ function updateQuests(placedQ, placedR) {
 // ════════════════════════════════════════════
 function addFloatingText(q, r, text, color) {
   const { x, y } = hexToPixel(q, r);
-  floatingTexts.push({ x, y, text, color: color || '#e0a535', age: 0 });
+  floatingTexts.push({ x, y, text, color: color || '#ffff00', age: 0 });
   startAnimation();
 }
 
@@ -715,12 +797,10 @@ function animLoop(now) {
   lastAnimTime = now;
   let needsUpdate = false;
 
-  // Update floating texts
   for (const ft of floatingTexts) ft.age += dt;
   floatingTexts = floatingTexts.filter(ft => ft.age < 1500);
   if (floatingTexts.length > 0) needsUpdate = true;
 
-  // Animate score counter
   if (displayScore !== score) {
     const diff = score - displayScore;
     displayScore += Math.sign(diff) * Math.max(1, Math.ceil(Math.abs(diff) * dt / 300));
@@ -776,10 +856,14 @@ function draw() {
   for (const key of flags) {
     const { q, r } = parseKey(key);
     const { x, y } = hexToPixel(q, r);
-    ctx.font = `${HEX_SIZE * 0.38}px serif`;
+    ctx.font = `${HEX_SIZE * 0.25}px 'Press Start 2P', monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('🚩', x + HEX_SIZE * 0.28, y - HEX_SIZE * 0.22);
+    ctx.fillStyle = '#ff0044';
+    ctx.shadowColor = '#ff0044';
+    ctx.shadowBlur = 6;
+    ctx.fillText('!', x + HEX_SIZE * 0.28, y - HEX_SIZE * 0.22);
+    ctx.shadowBlur = 0;
   }
 
   // Draw floating texts
@@ -787,7 +871,7 @@ function draw() {
     const alpha = Math.max(0, 1 - ft.age / 1500);
     const yOff = -HEX_SIZE * 0.8 - (ft.age / 1500) * 40;
     ctx.globalAlpha = alpha;
-    ctx.font = `bold ${14 / zoom}px 'Segoe UI', sans-serif`;
+    ctx.font = `${10 / zoom}px 'Press Start 2P', monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.strokeStyle = '#000';
@@ -813,24 +897,49 @@ function drawHex(context, cx, cy, size, typeIdx, isGhost) {
   context.closePath();
 
   if (isGhost) {
-    context.fillStyle = 'rgba(255,255,255,0.06)';
-    context.fill();
-    context.strokeStyle = 'rgba(255,255,255,0.18)';
-    context.lineWidth = 1.5;
-    context.setLineDash([4, 4]);
+    context.strokeStyle = 'rgba(0, 255, 255, 0.15)';
+    context.lineWidth = 1;
+    context.setLineDash([3, 5]);
     context.stroke();
     context.setLineDash([]);
   } else {
     const tile = TILE_TYPES[typeIdx];
-    context.fillStyle = tile.color;
+
+    // Dark fill
+    context.fillStyle = tile.dark;
     context.fill();
-    context.strokeStyle = 'rgba(0,0,0,0.35)';
+
+    // Neon border with glow
+    context.shadowColor = tile.color;
+    context.shadowBlur = 10;
+    context.strokeStyle = tile.color;
     context.lineWidth = 2;
     context.stroke();
-    context.font = `${size * 0.55}px serif`;
+    context.shadowBlur = 0;
+
+    // Inner border accent
+    context.strokeStyle = tile.color + '44';
+    context.lineWidth = 0.5;
+    context.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = Math.PI / 180 * (60 * i);
+      const vx = cx + (size - 5) * Math.cos(angle);
+      const vy = cy + (size - 5) * Math.sin(angle);
+      if (i === 0) context.moveTo(vx, vy);
+      else context.lineTo(vx, vy);
+    }
+    context.closePath();
+    context.stroke();
+
+    // Pixel-font icon letter
+    context.font = `${size * 0.4}px 'Press Start 2P', monospace`;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(tile.icon, cx, cy + 1);
+    context.shadowColor = tile.color;
+    context.shadowBlur = 8;
+    context.fillStyle = tile.color;
+    context.fillText(tile.icon, cx, cy + 2);
+    context.shadowBlur = 0;
   }
 }
 
@@ -853,6 +962,7 @@ function updateUI() {
   const tile = TILE_TYPES[nextTile];
   document.getElementById('preview-name').textContent = tile.name;
   document.getElementById('preview-name').style.color = tile.color;
+  document.getElementById('preview-name').style.textShadow = `0 0 6px ${tile.color}`;
   drawPreview();
 }
 
@@ -867,10 +977,10 @@ function renderQuests() {
       <div class="q-name">${quest.name}</div>
       <div class="q-desc">${quest.desc}</div>
       <div class="q-progress-row">
-        <span class="q-progress-text">${quest.progress} / ${quest.target}</span>
+        <span class="q-progress-text">${quest.progress}/${quest.target}</span>
         <div class="q-bar"><div class="q-bar-fill" style="width:${pct}%"></div></div>
       </div>
-      <div class="q-reward">+${quest.rewardTiles} Tiles, +${quest.rewardPts} Pts</div>
+      <div class="q-reward">+${quest.rewardTiles} TILES +${quest.rewardPts} PTS</div>
     `;
     container.appendChild(card);
   }
@@ -881,7 +991,7 @@ function buildLegend() {
   TILE_TYPES.forEach(t => {
     const item = document.createElement('div');
     item.className = 'legend-item';
-    item.innerHTML = `<div class="legend-swatch" style="background:${t.color}">${t.icon}</div>${t.name}`;
+    item.innerHTML = `<div class="legend-swatch" style="background:${t.dark};color:${t.color};border-color:${t.color}">${t.icon}</div><span style="color:${t.color}">${t.name}</span>`;
     container.appendChild(item);
   });
 }
@@ -929,23 +1039,18 @@ function handleClick(e) {
   const key = hexKey(q, r);
 
   if (ghosts.has(key)) {
-    // Save state for undo BEFORE making changes
     undoStack.push(saveSnapshot());
 
-    // Place tile
     placed.set(key, nextTile);
     tilesLeft--;
 
-    // Score
     const pts = calcPlacementScore(q, r, nextTile);
     score += pts;
-    addFloatingText(q, r, `+${pts}`, '#fff');
+    addFloatingText(q, r, `+${pts}`, '#ffff00');
 
-    // Rebuild ghosts and check quests
     rebuildGhosts();
     updateQuests(q, r);
 
-    // Check game over
     if (tilesLeft <= 0) {
       gameOver = true;
       document.getElementById('final-score-val').textContent = score;
@@ -956,7 +1061,7 @@ function handleClick(e) {
 
     updateUI();
     draw();
-    startAnimation(); // kick off score counter animation
+    startAnimation();
   }
 }
 
@@ -976,7 +1081,6 @@ boardCanvas.addEventListener('wheel', e => {
 const PAN_SPEED = 40;
 
 window.addEventListener('keydown', e => {
-  // Undo: Ctrl+Z
   if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
     e.preventDefault();
     undo();
@@ -1017,12 +1121,14 @@ document.getElementById('overlay-new-game').addEventListener('click', () => {
 document.getElementById('undo-btn').addEventListener('click', undo);
 
 // ════════════════════════════════════════════
-//  BOOT
+//  BOOT  (wait for pixel font)
 // ════════════════════════════════════════════
 window.addEventListener('resize', resize);
 buildLegend();
-resize();
-newGame();
+document.fonts.ready.then(() => {
+  resize();
+  newGame();
+});
 </script>
 </body>
 </html>
