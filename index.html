@@ -18,72 +18,140 @@
 
   /* ── Sidebar ── */
   #sidebar {
-    width: 220px;
-    min-width: 220px;
+    width: 240px;
+    min-width: 240px;
     background: #16213e;
-    padding: 24px 18px;
+    padding: 20px 16px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     border-right: 2px solid #0f3460;
     z-index: 10;
+    overflow-y: auto;
   }
 
   #sidebar h1 {
-    font-size: 28px;
+    font-size: 26px;
     letter-spacing: 2px;
     color: #e0a535;
     text-align: center;
     text-transform: uppercase;
   }
 
-  #sidebar .info {
-    font-size: 15px;
+  .stats-row {
+    display: flex;
+    justify-content: space-around;
     text-align: center;
-    color: #9db5d4;
   }
-
-  #sidebar .info strong {
+  .stat { font-size: 13px; color: #9db5d4; }
+  .stat strong {
+    display: block;
     color: #fff;
     font-size: 22px;
+    line-height: 1.3;
   }
+  .stat .score-val { color: #e0a535; }
 
-  #new-game-btn {
-    background: #e0a535;
-    color: #1a1a2e;
-    border: none;
-    padding: 10px 0;
-    font-size: 15px;
+  .btn-row { display: flex; gap: 8px; }
+  .btn-row button {
+    flex: 1;
+    padding: 9px 0;
+    font-size: 14px;
     font-weight: 700;
+    border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background .2s;
   }
+  #new-game-btn { background: #e0a535; color: #1a1a2e; }
   #new-game-btn:hover { background: #f0b848; }
+  #undo-btn { background: #0f3460; color: #9db5d4; border: 1px solid #1a4a7a !important; }
+  #undo-btn:hover { background: #1a4a7a; color: #fff; }
+  #undo-btn:disabled { opacity: .35; cursor: default; }
 
-  /* Legend */
-  #legend { display: flex; flex-direction: column; gap: 8px; }
+  /* Quests */
+  #quests-section h3,
   #legend h3 {
-    font-size: 13px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #6c8ebf;
+    margin-bottom: 4px;
+  }
+  #quests-section { display: flex; flex-direction: column; gap: 6px; }
+
+  .quest-card {
+    background: #0d1b36;
+    border: 1px solid #1a3a5c;
+    border-radius: 8px;
+    padding: 8px 10px;
+    transition: box-shadow .3s, border-color .3s;
+  }
+  .quest-card .q-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e0e0e0;
     margin-bottom: 2px;
   }
+  .quest-card .q-desc {
+    font-size: 11px;
+    color: #7a9cc6;
+    margin-bottom: 4px;
+  }
+  .quest-card .q-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+  }
+  .quest-card .q-progress-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9db5d4;
+    min-width: 38px;
+  }
+  .q-bar {
+    flex: 1;
+    height: 6px;
+    background: #1a2a44;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .q-bar-fill {
+    height: 100%;
+    background: #e0a535;
+    border-radius: 3px;
+    transition: width .4s ease;
+  }
+  .quest-card .q-reward {
+    font-size: 11px;
+    color: #6c8ebf;
+  }
+
+  @keyframes goldFlash {
+    0%   { border-color: #e0a535; box-shadow: 0 0 14px rgba(224,165,53,.5); }
+    100% { border-color: #1a3a5c; box-shadow: none; }
+  }
+  .quest-card.flash {
+    animation: goldFlash 1s ease-out;
+  }
+
+  /* Legend */
+  #legend { display: flex; flex-direction: column; gap: 6px; }
   .legend-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 14px;
+    font-size: 13px;
   }
   .legend-swatch {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   /* ── Canvas area ── */
@@ -187,6 +255,14 @@
     font-size: 42px;
     color: #e0a535;
   }
+  #overlay .final-score {
+    font-size: 22px;
+    color: #9db5d4;
+  }
+  #overlay .final-score strong {
+    color: #fff;
+    font-size: 28px;
+  }
   #overlay button {
     background: #e0a535;
     color: #1a1a2e;
@@ -205,8 +281,22 @@
 <!-- Sidebar -->
 <div id="sidebar">
   <h1>GridLands</h1>
-  <div class="info">Tiles remaining<br><strong id="tiles-remaining">40</strong></div>
-  <button id="new-game-btn">New Game</button>
+
+  <div class="stats-row">
+    <div class="stat">Score<br><strong class="score-val" id="score-value">0</strong></div>
+    <div class="stat">Tiles<br><strong id="tiles-remaining">40</strong></div>
+  </div>
+
+  <div class="btn-row">
+    <button id="new-game-btn">New Game</button>
+    <button id="undo-btn" disabled>Undo</button>
+  </div>
+
+  <div id="quests-section">
+    <h3>Current Quests</h3>
+    <div id="quest-list"></div>
+  </div>
+
   <div id="legend">
     <h3>Tile Legend</h3>
   </div>
@@ -234,6 +324,7 @@
   <!-- End-of-game overlay -->
   <div id="overlay">
     <h2>All done!</h2>
+    <p class="final-score">Final Score: <strong id="final-score-val">0</strong></p>
     <button id="overlay-new-game">Play Again</button>
   </div>
 </div>
@@ -250,14 +341,14 @@ const TILE_TYPES = [
   { name: 'Rail',    color: '#6c757d', icon: '🚂' },
 ];
 
-const MAX_TILES = 40;
+const STARTING_TILES = 40;
+const TILES_PER_TYPE_IN_BAG = 8;
 
 // ════════════════════════════════════════════
 //  HEX MATH  (flat-top hexagons)
 // ════════════════════════════════════════════
-const HEX_SIZE = 42; // radius (centre to vertex)
+const HEX_SIZE = 42;
 
-// Axial directions for flat-top hex neighbours
 const DIRS = [
   [+1, 0], [-1, 0], [0, +1], [0, -1], [+1, -1], [-1, +1]
 ];
@@ -288,25 +379,168 @@ function hexRound(qf, rf) {
 }
 
 function hexKey(q, r) { return `${q},${r}`; }
+function parseKey(k) { const p = k.split(','); return { q: +p[0], r: +p[1] }; }
 
 function getNeighbors(q, r) {
   return DIRS.map(([dq, dr]) => ({ q: q + dq, r: r + dr }));
 }
 
 // ════════════════════════════════════════════
+//  BAG SHUFFLE SYSTEM
+// ════════════════════════════════════════════
+let bag = [];
+
+function fillBag() {
+  bag = [];
+  for (let i = 0; i < TILE_TYPES.length; i++) {
+    for (let j = 0; j < TILES_PER_TYPE_IN_BAG; j++) {
+      bag.push(i);
+    }
+  }
+  shuffleArray(bag);
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function drawFromBag() {
+  if (bag.length === 0) fillBag();
+  return bag.pop();
+}
+
+// ════════════════════════════════════════════
+//  QUEST HELPERS
+// ════════════════════════════════════════════
+
+// Find the largest connected component of a given tile type.
+// Returns { size, tiles: [key, ...] }
+function findLargestCluster(tileIdx) {
+  const visited = new Set();
+  let best = { size: 0, tiles: [] };
+  for (const [key, type] of placed) {
+    if (type !== tileIdx || visited.has(key)) continue;
+    const component = [];
+    const queue = [key];
+    visited.add(key);
+    while (queue.length) {
+      const k = queue.shift();
+      component.push(k);
+      const { q, r } = parseKey(k);
+      for (const n of getNeighbors(q, r)) {
+        const nk = hexKey(n.q, n.r);
+        if (!visited.has(nk) && placed.get(nk) === tileIdx) {
+          visited.add(nk);
+          queue.push(nk);
+        }
+      }
+    }
+    if (component.length > best.size) {
+      best = { size: component.length, tiles: component };
+    }
+  }
+  return best;
+}
+
+// Find the longest straight line of a given tile type along any hex axis.
+// Returns { length, tiles: [key, ...] }
+function findLongestLine(tileIdx) {
+  const axes = [[1, 0], [0, 1], [1, -1]];
+  let best = { length: 0, tiles: [] };
+  const checked = new Set(); // avoid redundant line traces
+
+  for (const [key, type] of placed) {
+    if (type !== tileIdx) continue;
+    const { q, r } = parseKey(key);
+    for (const [dq, dr] of axes) {
+      const lineKey = `${key}|${dq},${dr}`;
+      if (checked.has(lineKey)) continue;
+
+      const tiles = [key];
+      // walk forward
+      let cq = q + dq, cr = r + dr;
+      while (placed.get(hexKey(cq, cr)) === tileIdx) {
+        const k = hexKey(cq, cr);
+        tiles.push(k);
+        checked.add(`${k}|${dq},${dr}`);
+        cq += dq; cr += dr;
+      }
+      // walk backward
+      cq = q - dq; cr = r - dr;
+      while (placed.get(hexKey(cq, cr)) === tileIdx) {
+        const k = hexKey(cq, cr);
+        tiles.unshift(k);
+        checked.add(`${k}|${dq},${dr}`);
+        cq -= dq; cr -= dr;
+      }
+      if (tiles.length > best.length) {
+        best = { length: tiles.length, tiles };
+      }
+    }
+  }
+  return best;
+}
+
+function randInt(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+function generateQuest(excludeTileIdxs) {
+  const mechanics = [
+    { type: 'cluster', labels: ['connected', 'grouped together'], targetMin: 5, targetMax: 8 },
+    { type: 'line', labels: ['in a line'], targetMin: 4, targetMax: 6 },
+  ];
+  const mech = mechanics[Math.floor(Math.random() * mechanics.length)];
+  let tileIdx;
+  let tries = 0;
+  do {
+    tileIdx = Math.floor(Math.random() * TILE_TYPES.length);
+    tries++;
+  } while (excludeTileIdxs.includes(tileIdx) && tries < 20);
+
+  const target = randInt(mech.targetMin, mech.targetMax);
+  const label = mech.labels[Math.floor(Math.random() * mech.labels.length)];
+  const rewardTiles = randInt(3, 6);
+  const rewardPts = target * 25;
+
+  return {
+    name: `Big ${TILE_TYPES[tileIdx].name}`,
+    desc: `Place ${target} ${TILE_TYPES[tileIdx].name}s ${label}`,
+    mechanic: mech.type,
+    tileIdx,
+    target,
+    progress: 0,
+    rewardTiles,
+    rewardPts,
+  };
+}
+
+// ════════════════════════════════════════════
 //  GAME STATE
 // ════════════════════════════════════════════
 let placed = new Map();   // key -> tileType index
-let ghosts = new Set();   // keys of valid placement spots
-let tilesLeft = MAX_TILES;
+let ghosts = new Set();
+let flags = new Set();    // hex keys with 🚩
+let tilesLeft = STARTING_TILES;
 let nextTile = 0;
 let gameOver = false;
+let score = 0;
+let displayScore = 0;
+let quests = [];
+let undoStack = [];
 
 // Camera / pan / zoom
 let camX = 0, camY = 0;
 let zoom = 1;
 const ZOOM_MIN = 0.3, ZOOM_MAX = 3, ZOOM_STEP = 0.1;
 let dragging = false, dragStartX, dragStartY, camStartX, camStartY;
+
+// Floating score texts
+let floatingTexts = [];
+let animFrameId = null;
 
 // Canvas refs
 const boardCanvas = document.getElementById('board');
@@ -320,32 +554,187 @@ const pctx = previewCanvas.getContext('2d');
 function newGame() {
   placed = new Map();
   ghosts = new Set();
-  tilesLeft = MAX_TILES;
+  flags = new Set();
+  tilesLeft = STARTING_TILES;
+  score = 0;
+  displayScore = 0;
   gameOver = false;
+  undoStack = [];
+  floatingTexts = [];
 
-  // Place a random starting tile at origin
-  const startType = randTile();
+  fillBag();
+
+  // Starting tile at origin
+  const startType = drawFromBag();
   placed.set(hexKey(0, 0), startType);
   rebuildGhosts();
 
-  nextTile = randTile();
+  // Initial quests per spec
+  quests = [
+    { name: 'Big Forest',  desc: 'Place 7 connected Forests',        mechanic: 'cluster', tileIdx: 0, target: 7, progress: 0, rewardTiles: 5, rewardPts: 180 },
+    { name: 'Big River',   desc: 'Place 8 Rivers in a line',         mechanic: 'line',    tileIdx: 3, target: 8, progress: 0, rewardTiles: 5, rewardPts: 180 },
+    { name: 'Big Field',   desc: 'Place 8 Fields grouped together',  mechanic: 'cluster', tileIdx: 2, target: 8, progress: 0, rewardTiles: 5, rewardPts: 180 },
+  ];
+
+  nextTile = drawFromBag();
   updateUI();
+  renderQuests();
   document.getElementById('overlay').classList.remove('visible');
   draw();
-}
-
-function randTile() {
-  return Math.floor(Math.random() * TILE_TYPES.length);
 }
 
 function rebuildGhosts() {
   ghosts.clear();
   for (const key of placed.keys()) {
-    const [q, r] = key.split(',').map(Number);
+    const { q, r } = parseKey(key);
     for (const n of getNeighbors(q, r)) {
       const nk = hexKey(n.q, n.r);
       if (!placed.has(nk)) ghosts.add(nk);
     }
+  }
+}
+
+// ════════════════════════════════════════════
+//  UNDO
+// ════════════════════════════════════════════
+function saveSnapshot() {
+  return {
+    placed: new Map(placed),
+    bag: [...bag],
+    nextTile,
+    tilesLeft,
+    score,
+    quests: JSON.parse(JSON.stringify(quests)),
+    flags: new Set(flags),
+  };
+}
+
+function undo() {
+  if (undoStack.length === 0) return;
+  const snap = undoStack.pop();
+  placed = snap.placed;
+  bag = snap.bag;
+  nextTile = snap.nextTile;
+  tilesLeft = snap.tilesLeft;
+  score = snap.score;
+  displayScore = snap.score;
+  quests = snap.quests;
+  flags = snap.flags;
+  gameOver = false;
+  floatingTexts = [];
+  rebuildGhosts();
+  updateUI();
+  renderQuests();
+  document.getElementById('overlay').classList.remove('visible');
+  draw();
+}
+
+// ════════════════════════════════════════════
+//  SCORING
+// ════════════════════════════════════════════
+function calcPlacementScore(q, r, typeIdx) {
+  let pts = 10;
+  for (const n of getNeighbors(q, r)) {
+    if (placed.get(hexKey(n.q, n.r)) === typeIdx) {
+      pts += 15;
+    }
+  }
+  return pts;
+}
+
+// ════════════════════════════════════════════
+//  QUEST CHECKING
+// ════════════════════════════════════════════
+function updateQuests(placedQ, placedR) {
+  for (let i = 0; i < quests.length; i++) {
+    const quest = quests[i];
+    let result;
+    if (quest.mechanic === 'cluster') {
+      result = findLargestCluster(quest.tileIdx);
+      quest.progress = result.size;
+    } else {
+      result = findLongestLine(quest.tileIdx);
+      quest.progress = result.length;
+    }
+
+    if (quest.progress >= quest.target) {
+      // Quest complete!
+      score += quest.rewardPts;
+      tilesLeft += quest.rewardTiles;
+
+      // Place flag at the placed tile that triggered completion
+      flags.add(hexKey(placedQ, placedR));
+
+      // Floating text
+      addFloatingText(placedQ, placedR,
+        `🚩 +${quest.rewardPts}pts +${quest.rewardTiles} tiles`, '#ffd700');
+
+      // Replace with new quest
+      const excludeIdxs = quests.filter((_, j) => j !== i).map(q2 => q2.tileIdx);
+      quests[i] = generateQuest(excludeIdxs);
+
+      // Update new quest progress immediately
+      const nq = quests[i];
+      if (nq.mechanic === 'cluster') {
+        nq.progress = findLargestCluster(nq.tileIdx).size;
+      } else {
+        nq.progress = findLongestLine(nq.tileIdx).length;
+      }
+
+      // Flash the card
+      requestAnimationFrame(() => {
+        const cards = document.querySelectorAll('.quest-card');
+        if (cards[i]) {
+          cards[i].classList.add('flash');
+          setTimeout(() => cards[i].classList.remove('flash'), 1000);
+        }
+      });
+    }
+  }
+  renderQuests();
+}
+
+// ════════════════════════════════════════════
+//  FLOATING TEXT / ANIMATION
+// ════════════════════════════════════════════
+function addFloatingText(q, r, text, color) {
+  const { x, y } = hexToPixel(q, r);
+  floatingTexts.push({ x, y, text, color: color || '#e0a535', age: 0 });
+  startAnimation();
+}
+
+function startAnimation() {
+  if (animFrameId) return;
+  lastAnimTime = performance.now();
+  animFrameId = requestAnimationFrame(animLoop);
+}
+
+let lastAnimTime = 0;
+function animLoop(now) {
+  const dt = now - lastAnimTime;
+  lastAnimTime = now;
+  let needsUpdate = false;
+
+  // Update floating texts
+  for (const ft of floatingTexts) ft.age += dt;
+  floatingTexts = floatingTexts.filter(ft => ft.age < 1500);
+  if (floatingTexts.length > 0) needsUpdate = true;
+
+  // Animate score counter
+  if (displayScore !== score) {
+    const diff = score - displayScore;
+    displayScore += Math.sign(diff) * Math.max(1, Math.ceil(Math.abs(diff) * dt / 300));
+    if (Math.abs(displayScore - score) < 2) displayScore = score;
+    document.getElementById('score-value').textContent = displayScore;
+    needsUpdate = true;
+  }
+
+  draw();
+
+  if (needsUpdate) {
+    animFrameId = requestAnimationFrame(animLoop);
+  } else {
+    animFrameId = null;
   }
 }
 
@@ -371,17 +760,43 @@ function draw() {
 
   // Draw ghosts
   for (const key of ghosts) {
-    const [q, r] = key.split(',').map(Number);
+    const { q, r } = parseKey(key);
     const { x, y } = hexToPixel(q, r);
     drawHex(ctx, x, y, HEX_SIZE, null, true);
   }
 
   // Draw placed tiles
   for (const [key, typeIdx] of placed) {
-    const [q, r] = key.split(',').map(Number);
+    const { q, r } = parseKey(key);
     const { x, y } = hexToPixel(q, r);
     drawHex(ctx, x, y, HEX_SIZE, typeIdx, false);
   }
+
+  // Draw flags
+  for (const key of flags) {
+    const { q, r } = parseKey(key);
+    const { x, y } = hexToPixel(q, r);
+    ctx.font = `${HEX_SIZE * 0.38}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🚩', x + HEX_SIZE * 0.28, y - HEX_SIZE * 0.22);
+  }
+
+  // Draw floating texts
+  for (const ft of floatingTexts) {
+    const alpha = Math.max(0, 1 - ft.age / 1500);
+    const yOff = -HEX_SIZE * 0.8 - (ft.age / 1500) * 40;
+    ctx.globalAlpha = alpha;
+    ctx.font = `bold ${14 / zoom}px 'Segoe UI', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 3 / zoom;
+    ctx.strokeText(ft.text, ft.x, ft.y + yOff);
+    ctx.fillStyle = ft.color;
+    ctx.fillText(ft.text, ft.x, ft.y + yOff);
+  }
+  ctx.globalAlpha = 1;
 
   ctx.restore();
 }
@@ -412,8 +827,6 @@ function drawHex(context, cx, cy, size, typeIdx, isGhost) {
     context.strokeStyle = 'rgba(0,0,0,0.35)';
     context.lineWidth = 2;
     context.stroke();
-
-    // Icon
     context.font = `${size * 0.55}px serif`;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
@@ -434,17 +847,37 @@ function drawPreview() {
 //  UI UPDATES
 // ════════════════════════════════════════════
 function updateUI() {
+  document.getElementById('score-value').textContent = displayScore;
   document.getElementById('tiles-remaining').textContent = tilesLeft;
+  document.getElementById('undo-btn').disabled = undoStack.length === 0;
   const tile = TILE_TYPES[nextTile];
   document.getElementById('preview-name').textContent = tile.name;
   document.getElementById('preview-name').style.color = tile.color;
   drawPreview();
 }
 
-// Build legend once
+function renderQuests() {
+  const container = document.getElementById('quest-list');
+  container.innerHTML = '';
+  for (const quest of quests) {
+    const pct = Math.min(100, Math.round((quest.progress / quest.target) * 100));
+    const card = document.createElement('div');
+    card.className = 'quest-card';
+    card.innerHTML = `
+      <div class="q-name">${quest.name}</div>
+      <div class="q-desc">${quest.desc}</div>
+      <div class="q-progress-row">
+        <span class="q-progress-text">${quest.progress} / ${quest.target}</span>
+        <div class="q-bar"><div class="q-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="q-reward">+${quest.rewardTiles} Tiles, +${quest.rewardPts} Pts</div>
+    `;
+    container.appendChild(card);
+  }
+}
+
 function buildLegend() {
   const container = document.getElementById('legend');
-  // keep the h3
   TILE_TYPES.forEach(t => {
     const item = document.createElement('div');
     item.className = 'legend-item';
@@ -477,8 +910,6 @@ boardCanvas.addEventListener('pointerup', e => {
   const dx = e.clientX - dragStartX;
   const dy = e.clientY - dragStartY;
   dragging = false;
-
-  // If barely moved, treat as a click
   if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
     handleClick(e);
   }
@@ -498,18 +929,34 @@ function handleClick(e) {
   const key = hexKey(q, r);
 
   if (ghosts.has(key)) {
+    // Save state for undo BEFORE making changes
+    undoStack.push(saveSnapshot());
+
+    // Place tile
     placed.set(key, nextTile);
     tilesLeft--;
-    rebuildGhosts();
 
+    // Score
+    const pts = calcPlacementScore(q, r, nextTile);
+    score += pts;
+    addFloatingText(q, r, `+${pts}`, '#fff');
+
+    // Rebuild ghosts and check quests
+    rebuildGhosts();
+    updateQuests(q, r);
+
+    // Check game over
     if (tilesLeft <= 0) {
       gameOver = true;
+      document.getElementById('final-score-val').textContent = score;
       document.getElementById('overlay').classList.add('visible');
     } else {
-      nextTile = randTile();
+      nextTile = drawFromBag();
     }
+
     updateUI();
     draw();
+    startAnimation(); // kick off score counter animation
   }
 }
 
@@ -529,6 +976,13 @@ boardCanvas.addEventListener('wheel', e => {
 const PAN_SPEED = 40;
 
 window.addEventListener('keydown', e => {
+  // Undo: Ctrl+Z
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    e.preventDefault();
+    undo();
+    return;
+  }
+
   let handled = true;
   switch (e.key) {
     case 'ArrowLeft':  camX += PAN_SPEED; break;
@@ -560,6 +1014,7 @@ document.getElementById('overlay-new-game').addEventListener('click', () => {
   camX = 0; camY = 0; zoom = 1;
   newGame();
 });
+document.getElementById('undo-btn').addEventListener('click', undo);
 
 // ════════════════════════════════════════════
 //  BOOT
